@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vanguard — Equipe FTC 37520</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header id="siteHeader">
+  <a href="#" class="brand">
+    <span class="brand-mark"><span></span><span></span><span></span><span></span></span>
+    VANGUARD
+  </a>
+  <nav class="nav-links">
+    <a href="#equipe">Equipe</a>
+    <a href="#robo">Robô</a>
+    <a href="#engenharia">Engenharia</a>
+    <a href="#impacto">Impacto</a>
+    <a href="#contato">Contato</a>
+  </nav>
+  <a href="#contato" class="nav-cta">Trabalhe conosco</a>
+  <button class="nav-toggle" aria-label="Menu"><span></span><span></span></button>
+</header>
+
+<section class="hero">
+  <canvas id="heroLiquidBg" class="hero-bg"></canvas>
+
+  <div class="hero-render" id="heroRender" data-media-slot="hero">
+    <img src="media/Team-logo.png">
+  </div>
+
+  <div class="hero-label"><span class="n">01</span> &nbsp;VANGUARD &middot; FTC 37520</div>
+
+  <h1 class="hero-title" id="heroTitle">
+    <span><em>Construímos.</em></span>
+    <span><em>Projetamos.</em></span>
+    <span><em>Competimos.</em></span>
+  </h1>
+
+  <div class="hero-foot" id="heroFoot">
+    <p class="hero-sub">Uma organização de engenharia estudantil que projeta, constrói e programa robôs de competição para o FIRST Tech Challenge.</p>
+    <div class="scroll-mark"><span>Role</span><div class="ln"></div></div>
+  </div>
+</section>
+
+<section class="section" id="equipe">
+  <div class="g">
+    <div class="identity-head" data-reveal="up">
+      <div class="label" style="margin-bottom:20px;"><span class="n">02</span> &nbsp;Identidade</div>
+      <h2>Somos uma equipe de estudantes, <span class="accent">engenheiros</span> e construtores.</h2>
+    </div>
+    <div class="identity-copy" data-reveal="up" style="--rd:.1s;">
+      <p>Fundada no SESI Apucarana, a Vanguard e um time estudantil de robotica, voltada para a inovacao, e existe para colocar estudantes à frente da engenharia, não como espectadores, mas como responsáveis por cada subsistema do robô: mecânica, eletrônica, software e estratégia.</p>
+    </div>
+    <div data-reveal=up class="team-image" id="teamimage">
+      <img src="media/Team-image.jpg">
+    </div>
+    <div class="identity-stats" data-reveal="up" style="--rd:.18s;">
+      <div class="stat-stack">
+        <div class="stat-line"><span class="v">2026</span><span class="l">Fundação</span></div>
+        <div class="stat-line"><span class="v">17</span><span class="l">Membros ativos</span></div>
+        <div class="stat-line"><span class="v">1</span><span class="l">Temporadas</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section robot-section section-alt" id="robo">
+  <div class="g">
+    <div class="robot-head" data-reveal="up">
+      <div class="label" style="margin-bottom:20px;"><span class="n">03</span> &nbsp;O Robô</div>
+      <h2>APEX-3</h2>
+      <p>Terceira geração do nosso robô de competição — reconstruído desde o chassi para ganhar velocidade e consistência sob pressão em partida.</p>
+    </div>
+  </div>
+
+  <div class="robot-stage" data-reveal="scale">
+    <div class="robot-visual" id="robotVisual">
+      <span class="robot-tag">FIG. 01 — CHASSI</span>
+      <span class="robot-hint">Passe o cursor para escanear</span>
+      <div class="robot-layer robot-front" id="robotFront">
+        <svg viewBox="0 0 200 200" fill="none">
+          <g>
+            <rect x="55" y="72" width="90" height="62" stroke="#5C5468" stroke-width="1.4"/>
+            <circle cx="68" cy="142" r="11" stroke="#5C5468" stroke-width="1.4"/>
+            <circle cx="132" cy="142" r="11" stroke="#5C5468" stroke-width="1.4"/>
+            <line x1="55" y1="98" x2="145" y2="98" stroke="#5C5468" stroke-width="1"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="robot-layer robot-blueprint" id="robotBlueprint">
+        <svg viewBox="0 0 200 200" fill="none">
+          <rect x="18" y="18" width="164" height="164" stroke="#8A7420" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="18" y1="10" x2="182" y2="10" stroke="#F2C230" stroke-width="1"/>
+          <text x="100" y="7" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" fill="#F2C230">355 mm</text>
+          <line x1="10" y1="18" x2="10" y2="182" stroke="#F2C230" stroke-width="1"/>
+          <text x="6" y="100" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" fill="#F2C230" transform="rotate(-90 6 100)">355 mm</text>
+
+          <rect x="45" y="65" width="110" height="75" stroke="#F5F3F7" stroke-width="1.4"/>
+          <line x1="45" y1="90" x2="155" y2="90" stroke="#8A7420" stroke-width="1"/>
+          <circle cx="58" cy="148" r="12" stroke="#948B9E" stroke-width="1.1"/>
+          <circle cx="142" cy="148" r="12" stroke="#948B9E" stroke-width="1.1"/>
+          <circle cx="100" cy="102" r="4" stroke="#F2C230" stroke-width="1"/>
+          <line x1="93" y1="102" x2="107" y2="102" stroke="#F2C230" stroke-width="0.8"/>
+          <line x1="100" y1="95" x2="100" y2="109" stroke="#F2C230" stroke-width="0.8"/>
+
+          <text x="100" y="163" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="9" fill="#F5F3F7" letter-spacing="1">APEX-3</text>
+          <text x="100" y="174" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="5" fill="#948B9E">REV. 03 &middot; 8,1 KG</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="robot-specs">
+      <div class="spec"><span class="k">Tração</span><span class="v">Mecanum 4 rodas</span></div>
+      <div class="spec"><span class="k">Material</span><span class="v">REX / Alumínio</span></div>
+      <div class="spec"><span class="k">Pontuação</span><span class="v">Elevador linear duplo</span></div>
+      <div class="spec"><span class="k">Visão</span><span class="v">Limelight 3A + AprilTags</span></div>
+      <div class="spec"><span class="k">Programação</span><span class="v">Java / Road Runner</span></div>
+      <div class="spec"><span class="k">Peso</span><span class="v">8,1 kg</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="engenharia">
+  <div class="g">
+    <div class="eng-head" data-reveal="up">
+      <div class="label" style="margin-bottom:20px;"><span class="n">04</span> &nbsp;Engenharia</div>
+      <h2>Do esboço à competição.</h2>
+    </div>
+
+    <div class="process" id="process" data-reveal="up" style="--rd:.1s;">
+      <span class="p-step" data-i="0">DESIGN</span><span class="p-arrow" data-i="0"></span>
+      <span class="p-step" data-i="1">PROTÓTIPO</span><span class="p-arrow" data-i="1"></span>
+      <span class="p-step" data-i="2">TESTE</span><span class="p-arrow" data-i="2"></span>
+      <span class="p-step" data-i="3">ITERAÇÃO</span><span class="p-arrow" data-i="3"></span>
+      <span class="p-step" data-i="4">COMPETIÇÃO</span>
+    </div>
+
+    <div class="discipline-row" data-reveal="up" style="--rd:.18s;">
+      <div class="discipline">CAD</div>
+      <div class="discipline">Engenharia Mecânica</div>
+      <div class="discipline">Elétrica</div>
+      <div class="discipline">Programação</div>
+      <div class="discipline">Autônomo</div>
+      <div class="discipline">Visão Computacional</div>
+      <div class="discipline">Testes</div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="g">
+    <div class="perf-head" data-reveal="up">
+      <div class="label" style="margin-bottom:20px;"><span class="n">05</span> &nbsp;Desempenho</div>
+      <h2>A temporada 2025–2026.</h2>
+    </div>
+    <div class="perf-row" data-reveal="up" style="--rd:.1s;">
+      <div class="numrow">
+        <div class="numcell"><div class="v"><span class="accent" data-count="4">0</span></div><div class="l">Eventos disputados</div></div>
+        <div class="numcell"><div class="v"><span class="accent" data-count="92">0</span>%</div><div class="l">Sucesso no autônomo</div></div>
+        <div class="numcell"><div class="v"><span class="accent" data-count="3">0</span></div><div class="l">Prêmios na temporada</div></div>
+        <div class="numcell"><div class="v"><span class="accent" data-count="1">0</span>&ordm;</div><div class="l">Aliança vencedora, regional</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="team-list-anchor">
+  <div class="g">
+    <div class="team-head" data-reveal="up">
+      <div class="label" style="margin-bottom:20px;"><span class="n">06</span> &nbsp;Equipe</div>
+      <h2>Quem é a Vanguard.</h2>
+    </div>
+    <div class="team-list" data-reveal="up" style="--rd:.1s;">
+      <div class="team-divider">
+      <span class="team-divider-num">01</span>
+      <span class="team-divider-label">Técnico</span>
+      <span class="team-divider-line"></span>
+    </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">L</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/leandrominellaprof?stkn=MXV0aHg1ejg3NmYzbg==" target="_blank" rel="noopener noreferrer">
+          Leandro Minela
+        </a>
+        <span class="t-role">Técnico &middot; Mentor</span>
+      </div>
+    <div class="team-list" data-reveal="up" style="--rd:.1s;">
+      <div class="team-divider">
+      <span class="team-divider-num">02</span>
+      <span class="team-divider-label">Gestão</span>
+      <span class="team-divider-line"></span>
+    </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">J</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/fattorijoao_?stkn=dHJ3azU1d2Ezanc=" target="_blank" rel="noopener noreferrer">
+          João Fattori
+        </a>
+        <span class="t-role">Capitão &middot; Gestão</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">P</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/pedromatheusneto1/" target="_blank" rel="noopener noreferrer">
+          Pedro Matheus Neto</a>
+        <span class="t-role">Gestão</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">M</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/duda__veroneze?stkn=Z2pzaDl2Ym1mMjN0" target="_blank" rel="noopener noreferrer">
+          Maria Eduarda Veroneze
+        </a>
+        <span class="t-role">Gestão</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">I</text></svg></span>
+         <a class="t-name" href="https://www.instagram.com/matias_1sa?stkn=bDhoZTFyOXUzcWQ5" target="_blank" rel="noopener noreferrer">
+          Isadora Diniz
+        </a>
+        <span class="t-role">Gestão</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">A</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/ana_csperez?stkn=am53ZHB3ZDQ0dXd1" target="_blank" rel="noopener noreferrer">
+          Ana Júlia Perez
+        </a>
+        <span class="t-role">Gestão</span>
+      </div>
+      <div class="team-divider">
+        <span class="team-divider-num">03</span>
+        <span class="team-divider-label">Programação</span>
+        <span class="team-divider-line"></span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">M</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/mg_marchiori?stkn=MWp1bGd0eDJua3BpbA==" target="_blank" rel="noopener noreferrer">
+          Miguel Machiori
+        </a>
+        <span class="t-role">PROGRAMAÇÃO</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">A</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/thurz.f?stkn=MW14YmZnMDNremtwZw==" target="_blank" rel="noopener noreferrer">
+          Arthur Huida
+        </a>
+        <span class="t-role">PROGRAMAÇÃO</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">G</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/gab_pasinotto?stkn=anM3Zzk1bTg0NTRz" target="_blank" rel="noopener noreferrer">
+          Gabriel Pasinotto
+        </a>
+        <span class="t-role">PROGRAMAÇÃO</span>
+      </div>
+      <div class="team-divider">
+        <span class="team-divider-num">04</span>
+        <span class="team-divider-label">Engenharia</span>
+        <span class="team-divider-line"></span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">D</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/_dsouz?stkn=MXcxZDliMzdzMzN1Mw==" target="_blank" rel="noopener noreferrer">
+          Daniel Souza
+        </a>
+        <span class="t-role">Engenharia</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">A</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/ana.beatriz.ve?stkn=ZHFmbWhxMTBrNzM==" target="_blank" rel="noopener noreferrer">
+          Ana Beatriz Verona
+        </a>
+        <span class="t-role">Engenharia</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">G</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/ei.gu1lherme?stkn=bzFuYWluNXN1N3lh" target="_blank" rel="noopener noreferrer">
+          Guilherme Claudino
+        </a>
+        <span class="t-role">Engenharia</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">R</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/ryansoaressanches?stkn=MTh6ZmEwencwZ3ppYQ==" target="_blank" rel="noopener noreferrer">
+          Ryan Soares
+        </a>
+        <span class="t-role">Engenharia</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">V</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/vinip0400?stkn=Zmhhb3l2MXUwcDg2" target="_blank" rel="noopener noreferrer">
+          Vinícius Barbosa
+        </a>
+        <span class="t-role">Engenharia</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">C</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/cauegabrielcs?stkn=cHJnZG53MTBiNDRy" target="_blank" rel="noopener noreferrer">
+          Cauê Carvalho
+        </a>
+        <span class="t-role">Engenharia</span>
+      </div>
+      <div class="team-divider">
+        <span class="team-divider-num">05</span>
+        <span class="team-divider-label">Marketing</span>
+        <span class="team-divider-line"></span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">C</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/clarabeatrixz_?stkn=MXYxdXY4cjF5bm84ZQ==" target="_blank" rel="noopener noreferrer">
+          Clara Kern Marques
+        </a>
+        <span class="t-role">Marketing</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">M</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/m.veronezee?stkn=MWFuZWp0OWplNGNqcQ==" target="_blank" rel="noopener noreferrer">
+          Maria Clara Veroneze
+        </a>
+        <span class="t-role">Marketing</span>
+      </div>
+      <div class="t-member">
+        <span class="t-id"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="21" fill="none" stroke="#F2C230" stroke-width="1"/><text x="22" y="27" text-anchor="middle" font-family="Space Grotesk" font-size="14" fill="#F2C230">L</text></svg></span>
+        <a class="t-name" href="https://www.instagram.com/veroneze_luiz?stkn=MXM2b2R6ZWU2dmt2aQ==" target="_blank" rel="noopener noreferrer">
+          Luiz Felipe Veroneze
+        </a>
+        <span class="t-role">Marketing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="impacto">
+  <div class="g">
+    <div class="impact-head" data-reveal="up">
+      <div class="label" style="margin-bottom:20px;"><span class="n">07</span> &nbsp;Impacto</div>
+      <h2>Além da competição.</h2>
+    </div>
+    <div class="impact-copy" data-reveal="up" style="--rd:.1s;">
+      <p>Levamos robótica para fora do laboratório — oficinas, mentoria e eventos abertos para apresentar engenharia a quem talvez nunca tenha visto um robô de perto.</p>
+    </div>
+    <div class="impact-stats" data-reveal="up" style="--rd:.18s;">
+      <div class="stat-stack">
+        <div class="stat-line"><span class="v">18</span><span class="l">Oficinas realizadas</span></div>
+        <div class="stat-line"><span class="v">12</span><span class="l">Escolas alcançadas</span></div>
+        <div class="stat-line"><span class="v">300+</span><span class="l">Estudantes impactados</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="g">
+    <div class="sponsors-head" data-reveal="up">
+      <div class="label" style="margin-bottom:20px;"><span class="n">08</span> &nbsp;Patrocinadores</div>
+      <h2>Apoiado por</h2>
+    </div>
+    <div class="sponsor-line" data-reveal="up" style="--rd:.1s;">
+      <span class="sponsor-item">Patrocinador 01</span>
+      <span class="sponsor-item">Patrocinador 02</span>
+      <span class="sponsor-item">Patrocinador 03</span>
+      <span class="sponsor-item">Patrocinador 04</span>
+      <span class="sponsor-item">Patrocinador 05</span>
+    </div>
+  </div>
+</section>
+
+<section class="final" id="contato">
+  <div class="label" data-reveal="up" style="margin-bottom:22px;"><span class="n">09</span> &nbsp;Contato</div>
+  <h2 data-reveal="up" style="--rd:.06s;">A próxima versão<br>começa <span class="accent">aqui.</span></h2>
+  <div class="final-links" data-reveal="up" style="--rd:.16s;">
+    <a href="mailto:vanguardftc2026@gmail.com" class="final-link">Trabalhe conosco →</a>
+    <a href="https://www.instagram.com/vanguardftc_/" target="blank_" class="final-link">Apoie a equipe →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-row">
+    <div class="foot-col"><span class="t">Equipe</span>VANGUARD &middot; FTC 37520</div>
+    <div class="foot-col"><span class="t">Local</span>Apucarana &middot; Paraná</div>
+    <div class="foot-col"><span class="t">Redes</span><a href="https://www.instagram.com/vanguardftc_/" target="_blank">Instagram</a> &middot; <a href="#">YouTube</a></div>
+    <div class="foot-col"><span class="t">Email</span><a href="mailto:vanguardftc2026@gmail.com">vanguardftc2026@gmail.com</a></div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
