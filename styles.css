@@ -121,6 +121,7 @@
   z-index:0;
 }
   .hero-render img{
+
     width:100%;
     height:100%;
     object-fit:contain;
@@ -186,7 +187,7 @@
   .identity-head{grid-column:2 / 12;}
   .identity-head h2{font-size:clamp(30px,5.4vw,72px);max-width:980px;}
   .identity-head h2 .accent{color:var(--accent);}
-  .identity-copy{grid-column:2 / 7;margin-top:25px;}
+  .identity-copy{grid-column:2 / 5;margin-top:25px;}
   .identity-copy p{color:var(--ink-dim);font-size:15.5px;max-width:440px;}
   .identity-stats{grid-column:8 / 12;margin-top:34px;}
 
@@ -199,7 +200,7 @@
   .team-image {
     position:absolute;
     left:200px;
-    top:550px;
+    top:500px;
     width: 400px;
     height: 282px;
     object-fit:contain;
@@ -320,8 +321,21 @@
   .impact-head h2{font-size:clamp(30px,5vw,64px);}
   .impact-copy{grid-column:2 / 7;margin-top:30px;}
   .impact-copy p{color:var(--ink-dim);font-size:15.5px;max-width:440px;}
-  .impact-stats{grid-column:8 / 12;margin-top:30px;}
-
+  .impact-stats{grid-column:2 / 8;margin-top:30px;}
+  .impact-image{
+    position: absolute;
+    top: 12vw;
+    right: 12vw;
+    width: clamp(250px, 20vw, 500px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .impact-image img{
+    width: clamp(250px, 20vw, 500px);
+    height: auto;
+    object-fit: contain;
+  }
   /* ---------- Sponsors ---------- */
   .sponsors-head{grid-column:2 / 8;}
   .sponsors-head h2{font-size:clamp(28px,4.4vw,52px);}
@@ -412,7 +426,7 @@
         position: absolute;
         top: 420px;
         bottom: auto;
-        opacity:0.7;
+        opacity:0.8;
         right: 0;
         left: 0;
         width: 100% ;
@@ -424,7 +438,7 @@
         height: 100%;
         object-fit: contain;
         transform:scale(1.5);
-        opacity:0.7;
+        opacity:0.8;
       }
     }
   /* Imagem da equipe responsiva ao tamanho do dispositivo*/
