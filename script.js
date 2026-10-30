@@ -1,279 +1,363 @@
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+(() => {
+  'use strict';
 
-  /* Nav scroll state */
-  const header = document.getElementById('siteHeader');
-  window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 30), { passive:true });
+  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  /* Hero entrance */
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      document.getElementById('heroTitle').classList.add('play');
-      document.getElementById('heroFoot').classList.add('in');
-    }, 120);
-  });
+  /* ---------- Header: estado ao rolar (1 leitura por frame) ---------- */
+  const header = $('#siteHeader');
+  let scrollQueued = false;
+  const updateHeader = () => {
+    header.classList.toggle('scrolled', scrollY > 30);
+    scrollQueued = false;
+  };
+  addEventListener('scroll', () => {
+    if (!scrollQueued) { scrollQueued = true; requestAnimationFrame(updateHeader); }
+  }, { passive: true });
+  updateHeader();
 
-  /* Hero parallax on the robot render */
-  if (!reduceMotion) {
-    const render = document.getElementById('heroRender');
-    window.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 18;
-      const y = (e.clientY / window.innerHeight - 0.5) * 18;
-      render.style.transform = `translate(${x}px, ${y}px)`;
-    });
+  /* ---------- Menu mobile (classe .open; estilos ficam no CSS) ---------- */
+  const toggle = $('.nav-toggle');
+  const links = $('#navLinks');
+  if (toggle && links) {
+    const setMenu = (open) => {
+      links.classList.toggle('open', open);
+      toggle.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+    };
+    toggle.addEventListener('click', () => setMenu(!links.classList.contains('open')));
+    links.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+    matchMedia('(min-width: 981px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
   }
 
-  /* Generic scroll reveal */
-  const revealEls = document.querySelectorAll('[data-reveal]');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.15 });
-  revealEls.forEach(el => io.observe(el));
+  /* ---------- Links de e-mail ----------
+     "mailto:" só funciona quando há um app de e-mail configurado no aparelho
+     (no Mac/iPhone sempre há o Mail; no Windows/Linux quase nunca).
+     Então: copia o endereço, avisa, e no computador sem app abre o Gmail na web. */
+  const toast = $('#toast');
+  let toastTimer = 0;
+  const showToast = (msg) => {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+  };
 
-  /* Count-up numerals */
-  document.querySelectorAll('[data-count]').forEach(el => {
-    const target = parseFloat(el.getAttribute('data-count'));
-    const countIO = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        const dur = 1200, start = performance.now();
-        function tick(now){
-          const p = Math.min((now-start)/dur, 1);
-          const eased = 1 - Math.pow(1-p, 3);
-          el.textContent = Math.floor(eased * target);
-          if (p < 1) requestAnimationFrame(tick); else el.textContent = target;
-        }
-        requestAnimationFrame(tick);
-        countIO.unobserve(el);
+  const copyText = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // fallback para navegadores sem Clipboard API (ou http)
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch { /* ignora */ }
+      ta.remove();
+      return ok;
+    }
+  };
+
+  const ua = navigator.userAgent;
+  const isApple = /Mac|iPhone|iPad|iPod/.test(navigator.platform || ua) || /iPhone|iPad|iPod|Macintosh/.test(ua);
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+
+  document.querySelectorAll('a[data-email]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const email = link.dataset.email;
+      copyText(email).then((ok) => {
+        showToast(ok ? `E-mail copiado: ${email}` : email);
       });
-    }, { threshold:.6 });
-    countIO.observe(el);
+
+      // Apple e celulares têm app de e-mail: deixa o mailto seguir normalmente
+      if (isApple || isMobile) return;
+
+      e.preventDefault();
+      const gmail = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
+      window.open(gmail, '_blank', 'noopener');
+    });
   });
 
-  /* Engineering process — highlight steps as they enter view */
-  const steps = document.querySelectorAll('.p-step, .p-arrow');
-  const stepIO = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        const group = document.querySelectorAll(`[data-i="${e.target.dataset.i}"]`);
-        group.forEach((g,idx) => setTimeout(() => g.classList.add('on'), idx*80));
-        stepIO.unobserve(e.target);
+  /* ---------- Entrada do hero ---------- */
+  setTimeout(() => {
+    $('#heroTitle')?.classList.add('play');
+    $('#heroFoot')?.classList.add('in');
+  }, 120);
+
+  /* ---------- Parallax do logo (só desktop, 1 escrita por frame) ---------- */
+  const render = $('#heroRender');
+  if (render && finePointer && !reduceMotion) {
+    let tx = 0, ty = 0, queued = false;
+    addEventListener('mousemove', (e) => {
+      tx = (e.clientX / innerWidth - 0.5) * 18;
+      ty = (e.clientY / innerHeight - 0.5) * 18;
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        render.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+        queued = false;
+      });
+    }, { passive: true });
+  }
+
+  /* ---------- Reveal ao rolar ---------- */
+  const revealEls = document.querySelectorAll('[data-reveal]');
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    revealEls.forEach((el) => el.classList.add('in'));
+  } else {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       }
-    });
-  }, { threshold:.6 });
-  steps.forEach(s => stepIO.observe(s));
+    }, { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
+    revealEls.forEach((el) => io.observe(el));
+  }
 
-  /* Robot scan / reveal panel — organic morph trail (mesma técnica usada
-     no restante do site, adaptada para o painel maior desta seção) */
-  (function scanRevealPanel(){
-    const panel = document.getElementById('robotVisual');
-    const front = document.getElementById('robotFront');
-    const reveal = document.getElementById('robotBlueprint');
-    if (!panel || !front || !reveal) return;
+  /* ---------- Painel do robô: scanner com rastro orgânico ----------
+     As máscaras são desenhadas em baixa resolução (MASK_SCALE) e esticadas
+     pelo CSS: as bordas já são suaves, então o resultado é igual e o
+     toDataURL() de cada frame fica ~8x mais barato. */
+  (function robotScanner() {
+    const panel = $('#robotVisual');
+    const front = $('#robotFront');
+    const reveal = $('#robotBlueprint');
+    if (!panel || !front || !reveal || reduceMotion || !finePointer) return;
 
-    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (reduceMotion || !finePointer) return;
+    const MAX_POINTS = 70, HEAD_R = 0.22, NOISE_AMP = 0.32, BLOB_PTS = 24,
+          FADE = 0.93, SAMPLE = 9, MASK_SCALE = 0.35;
+    const TAU = Math.PI * 2;
 
-    const MAX_POINTS = 70, HEAD_R = 0.22, NOISE_AMP = 0.32, BLOB_PTS = 24, FADE = 0.93, SAMPLE = 9;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const fCanvas = document.createElement('canvas');
     const rCanvas = document.createElement('canvas');
     const fCtx = fCanvas.getContext('2d');
     const rCtx = rCanvas.getContext('2d');
 
-    let w=0,h=0,baseR=140,trail=[],headR=0,hovering=false,mouse={x:0,y:0},last=null,time=0,running=false;
+    let w = 0, h = 0, baseR = 140, headR = 0, time = 0;
+    let trail = [], last = null, hovering = false, running = false;
+    let clientX = 0, clientY = 0;
 
-    function resize(){
-      const rect = panel.getBoundingClientRect();
-      w = rect.width; h = rect.height;
-      baseR = Math.min(w,h) * HEAD_R;
-      [fCanvas, rCanvas].forEach(c => { c.width = w*dpr; c.height = h*dpr; });
-      fCtx.setTransform(dpr,0,0,dpr,0,0);
-      rCtx.setTransform(dpr,0,0,dpr,0,0);
+    const setMask = (el, url) => { el.style.webkitMaskImage = url; el.style.maskImage = url; };
+
+    function resize() {
+      w = panel.clientWidth; h = panel.clientHeight;
+      baseR = Math.min(w, h) * HEAD_R;
+      for (const c of [fCanvas, rCanvas]) {
+        c.width = Math.max(1, Math.round(w * MASK_SCALE));
+        c.height = Math.max(1, Math.round(h * MASK_SCALE));
+      }
+      fCtx.setTransform(MASK_SCALE, 0, 0, MASK_SCALE, 0, 0);
+      rCtx.setTransform(MASK_SCALE, 0, 0, MASK_SCALE, 0, 0);
       trail = []; last = null;
+      startLoop();
     }
 
-    function drawBlob(ctx,cx,cy,r,t,seed){
+    function drawBlob(ctx, cx, cy, r, t, seed) {
       if (r < 2) return;
-      const pts = [];
-      for (let i=0;i<BLOB_PTS;i++){
-        const a = (i/BLOB_PTS)*Math.PI*2;
-        const n1 = Math.sin(a*3 + t*1.4 + seed)*0.45;
-        const n2 = Math.sin(a*5 - t*0.9 + seed*2.3)*0.3;
-        const n3 = Math.cos(a*2 + t*1.8 + seed*0.7)*0.25;
-        const noise = (n1+n2+n3) * (r*NOISE_AMP);
-        const rad = r + noise;
-        pts.push([cx+Math.cos(a)*rad, cy+Math.sin(a)*rad]);
-      }
+      const amp = r * NOISE_AMP;
       ctx.beginPath();
-      for (let i=0;i<pts.length;i++){
-        const curr=pts[i], next=pts[(i+1)%pts.length];
-        const mid=[(curr[0]+next[0])/2,(curr[1]+next[1])/2];
-        if (i===0) ctx.moveTo(mid[0],mid[1]);
-        ctx.quadraticCurveTo(curr[0],curr[1],mid[0],mid[1]);
+      let px0 = 0, py0 = 0, pxPrev = 0, pyPrev = 0, m0x = 0, m0y = 0;
+      for (let i = 0; i <= BLOB_PTS; i++) {
+        const a = ((i % BLOB_PTS) / BLOB_PTS) * TAU;
+        const noise = (Math.sin(a * 3 + t * 1.4 + seed) * 0.45 +
+                       Math.sin(a * 5 - t * 0.9 + seed * 2.3) * 0.3 +
+                       Math.cos(a * 2 + t * 1.8 + seed * 0.7) * 0.25) * amp;
+        const px = cx + Math.cos(a) * (r + noise);
+        const py = cy + Math.sin(a) * (r + noise);
+        if (i === 0) { px0 = px; py0 = py; }
+        else {
+          const mx = (pxPrev + px) / 2, my = (pyPrev + py) / 2;
+          if (i === 1) { ctx.moveTo(mx, my); m0x = mx; m0y = my; }
+          else ctx.quadraticCurveTo(pxPrev, pyPrev, mx, my);
+        }
+        pxPrev = px; pyPrev = py;
       }
-      ctx.closePath(); ctx.fill();
+      // fecha a curva contornando o primeiro ponto
+      ctx.quadraticCurveTo(px0, py0, m0x, m0y);
+      ctx.closePath();
+      ctx.fill();
     }
 
-    function tick(){
-      const targetR = hovering ? baseR : 0;
-      headR += (targetR-headR) * (hovering ? 0.14 : 0.05);
+    function tick() {
+      headR += ((hovering ? baseR : 0) - headR) * (hovering ? 0.14 : 0.05);
 
-      if (hovering && headR>5){
-        if (!last || Math.hypot(mouse.x-last.x, mouse.y-last.y) > SAMPLE){
-          trail.push({x:mouse.x,y:mouse.y,r:headR,alpha:1,seed:Math.random()*100});
-          last = {x:mouse.x,y:mouse.y};
+      if (hovering && headR > 5) {
+        const rect = panel.getBoundingClientRect();
+        const x = clientX - rect.left, y = clientY - rect.top;
+        if (!last || Math.hypot(x - last.x, y - last.y) > SAMPLE) {
+          trail.push({ x, y, r: headR, alpha: 1, seed: Math.random() * 100 });
+          last = { x, y };
           if (trail.length > MAX_POINTS) trail.shift();
         }
       }
-      trail.forEach(p => { p.alpha *= FADE; p.r *= 0.996; });
-      trail = trail.filter(p => p.alpha > 0.01);
+
+      for (const p of trail) { p.alpha *= FADE; p.r *= 0.996; }
+      trail = trail.filter((p) => p.alpha > 0.01);
       time += 0.016;
 
-      fCtx.clearRect(0,0,w,h);
-      fCtx.globalCompositeOperation='source-over';
-      fCtx.fillStyle='#fff'; fCtx.fillRect(0,0,w,h);
-      fCtx.globalCompositeOperation='destination-out';
-      trail.forEach(p => { fCtx.globalAlpha=p.alpha; drawBlob(fCtx,p.x,p.y,p.r,time,p.seed); });
-      fCtx.globalAlpha=1; fCtx.globalCompositeOperation='source-over';
+      // máscara da camada da frente: tudo branco menos os blobs
+      fCtx.globalCompositeOperation = 'source-over';
+      fCtx.globalAlpha = 1;
+      fCtx.fillStyle = '#fff';
+      fCtx.fillRect(0, 0, w, h);
+      fCtx.globalCompositeOperation = 'destination-out';
 
-      rCtx.clearRect(0,0,w,h);
-      rCtx.fillStyle='#fff';
-      trail.forEach(p => { rCtx.globalAlpha=p.alpha; drawBlob(rCtx,p.x,p.y,p.r,time,p.seed); });
-      rCtx.globalAlpha=1;
+      // máscara do blueprint: só os blobs
+      rCtx.clearRect(0, 0, w, h);
+      rCtx.fillStyle = '#fff';
 
-      const fu = `url(${fCanvas.toDataURL()})`, ru = `url(${rCanvas.toDataURL()})`;
-      front.style.maskImage = fu; front.style.webkitMaskImage = fu;
-      reveal.style.maskImage = ru; reveal.style.webkitMaskImage = ru;
+      for (const p of trail) {
+        fCtx.globalAlpha = rCtx.globalAlpha = p.alpha;
+        drawBlob(fCtx, p.x, p.y, p.r, time, p.seed);
+        drawBlob(rCtx, p.x, p.y, p.r, time, p.seed);
+      }
+      rCtx.globalAlpha = 1;
 
-      if (hovering || trail.length>0 || headR>0.5) requestAnimationFrame(tick);
+      setMask(front, `url(${fCanvas.toDataURL()})`);
+      setMask(reveal, `url(${rCanvas.toDataURL()})`);
+
+      if (hovering || trail.length || headR > 0.5) requestAnimationFrame(tick);
       else running = false;
     }
-    function startLoop(){ if (!running){ running=true; requestAnimationFrame(tick); } }
 
-    resize();
-    window.addEventListener('resize', resize);
-    panel.addEventListener('mouseenter', () => { hovering=true; panel.classList.add('active'); startLoop(); });
-    panel.addEventListener('mousemove', (e) => {
-      const r = panel.getBoundingClientRect();
-      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+    function startLoop() {
+      if (!running) { running = true; requestAnimationFrame(tick); }
+    }
+
+    new ResizeObserver(resize).observe(panel);
+    panel.addEventListener('mouseenter', (e) => {
+      clientX = e.clientX; clientY = e.clientY;
+      hovering = true; panel.classList.add('active'); startLoop();
     });
-    panel.addEventListener('mouseleave', () => { hovering=false; panel.classList.remove('active'); startLoop(); });
+    panel.addEventListener('mousemove', (e) => { clientX = e.clientX; clientY = e.clientY; }, { passive: true });
+    panel.addEventListener('mouseleave', () => {
+      hovering = false; panel.classList.remove('active'); startLoop();
+    });
   })();
-  /* Fundo animado do hero — pixel liquid suave, reagindo ao cursor */
-  (function heroPixelLiquid(){
-    const canvas = document.getElementById('heroLiquidBg');
+
+  /* ---------- Fundo do hero: "pixel liquid" ----------
+     Otimizações em relação à versão anterior:
+     - o canvas tem exatamente COLS×ROWS pixels e o CSS amplia
+       (image-rendering: pixelated) → 1 putImageData por frame em vez de
+       3.600 fillRect + 3.600 strings rgb();
+     - cores vêm de uma tabela pré-calculada (LUT);
+     - senos que dependem só da linha ou só da coluna são calculados
+       uma vez por linha/coluna, não por célula;
+     - a animação pausa quando o hero sai da tela ou a aba fica oculta. */
+  (function heroPixelLiquid() {
+    const canvas = $('#heroLiquidBg');
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const COLS = 80, ROWS = 45;
-    const PALETTE = ['#0B0710', '#150029', '#240046', '#5A189A', '#bd9726ff'];
+    const COLS = 80, ROWS = 45, RIPPLE_LIFE = 4.5;
+    // Mesmas cores da versão original. Obs.: o original usava '#bd9726ff' (8 dígitos),
+    // que o parser antigo lia como rgb(151, 38, 255) — é essa a cor que aparecia na tela.
+    const PALETTE = [[11, 7, 16], [21, 0, 41], [36, 0, 70], [90, 24, 154], [151, 38, 255]];
 
+    canvas.width = COLS;
+    canvas.height = ROWS;
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const img = ctx.createImageData(COLS, ROWS);
+    const px = img.data;
+    for (let i = 3; i < px.length; i += 4) px[i] = 255;
 
-    let w, h, cellW, cellH;
-    let ripples = [];
-    let time = 0;
-    let lastRippleTime = -1;
-    let smoothed = null;
-
-    function hexToRgb(hex){
-      const n = parseInt(hex.slice(1), 16);
-      return [(n>>16)&255, (n>>8)&255, n&255];
-    }
-    const rgbCache = PALETTE.map(hexToRgb);
-
-    function colorFor(value){
-      const n = rgbCache.length - 1;
-      const scaled = Math.max(0, Math.min(1, value)) * n;
-      const i = Math.floor(scaled);
-      const f = scaled - i;
-      const c1 = rgbCache[Math.min(i, n)];
-      const c2 = rgbCache[Math.min(i+1, n)];
-      const r = Math.round(c1[0] + (c2[0]-c1[0])*f);
-      const g = Math.round(c1[1] + (c2[1]-c1[1])*f);
-      const b = Math.round(c1[2] + (c2[2]-c1[2])*f);
-      return `rgb(${r},${g},${b})`;
+    // LUT com 4096 tons interpolados na paleta (mesma fórmula do colorFor original)
+    const STEPS = 4095;
+    const LUT = new Uint8ClampedArray((STEPS + 1) * 3);
+    for (let i = 0; i <= STEPS; i++) {
+      const s = (i / STEPS) * (PALETTE.length - 1);
+      const k = Math.min(Math.floor(s), PALETTE.length - 1);
+      const f = s - k, a = PALETTE[k], b = PALETTE[Math.min(k + 1, PALETTE.length - 1)];
+      for (let c = 0; c < 3; c++) LUT[i * 3 + c] = Math.round(a[c] + (b[c] - a[c]) * f);
     }
 
-    function resize(){
-      const rect = canvas.parentElement.getBoundingClientRect();
-      w = canvas.width = rect.width;
-      h = canvas.height = rect.height;
-      cellW = w / COLS;
-      cellH = h / ROWS;
-      smoothed = new Float32Array(COLS * ROWS);
-    }
+    const NX = Float32Array.from({ length: COLS }, (_, x) => x / COLS);
+    const NY = Float32Array.from({ length: ROWS }, (_, y) => y / ROWS);
+    const warpY = new Float32Array(COLS), maskX = new Float32Array(COLS);
+    const warpX = new Float32Array(ROWS), maskY = new Float32Array(ROWS);
+    const smoothed = new Float32Array(COLS * ROWS);
 
-    function tick(){
+    let time = 0, lastRipple = -1, running = false, visible = true;
+    const ripples = [];
+
+    function draw() {
       time += 0.015;
-      ripples = ripples.filter(r => (time - r.born) < 4.5);
+      while (ripples.length && time - ripples[0].born >= RIPPLE_LIFE) ripples.shift();
 
-      for (let y = 0; y < ROWS; y++){
-        for (let x = 0; x < COLS; x++){
-          const nx = x / COLS, ny = y / ROWS;
+      for (let x = 0; x < COLS; x++) {
+        const nx = NX[x];
+        warpY[x] = Math.cos(nx * 4 - time * 0.25) * 0.25 + Math.cos(nx * 9 + time * 0.15) * 0.12;
+        maskX[x] = Math.sin(nx * 4 + time * 0.05);
+      }
+      for (let y = 0; y < ROWS; y++) {
+        const ny = NY[y];
+        warpX[y] = Math.sin(ny * 4 + time * 0.3) * 0.25 + Math.sin(ny * 9 - time * 0.12) * 0.12;
+        maskY[y] = Math.cos(ny * 4.2 - time * 0.04);
+      }
 
-          const warpX = Math.sin(ny*4 + time*0.3) * 0.25 + Math.sin(ny*9 - time*0.12) * 0.12;
-          const warpY = Math.cos(nx*4 - time*0.25) * 0.25 + Math.cos(nx*9 + time*0.15) * 0.12;
+      for (let y = 0, idx = 0; y < ROWS; y++) {
+        const ny = NY[y], wx = warpX[y], my = maskY[y];
+        for (let x = 0; x < COLS; x++, idx++) {
+          const nx = NX[x];
+          let v = Math.sin((nx + wx) * 10 + (ny + warpY[x]) * 4 + time * 0.4) * (0.55 + maskX[x] * my * 0.35);
 
-          const stripes = Math.sin((nx+warpX)*10 + (ny+warpY)*4 + time*0.4);
-          const mask = Math.sin(nx*4 + time*0.05) * Math.cos(ny*4.2 - time*0.04);
-
-          let v = stripes * (0.55 + mask*0.35);
-
-          for (const r of ripples){
-            const age = time - r.born;
-            const dx = nx - r.x, dy = ny - r.y;
-            const dist = Math.sqrt(dx*dx + dy*dy);
-            const decay = Math.max(0, 1 - age/4.5);
-            v += Math.sin(dist*8 - age*3) * decay * 0.20;
+          for (let r = 0; r < ripples.length; r++) {
+            const rp = ripples[r], age = time - rp.born;
+            const dx = nx - rp.x, dy = ny - rp.y;
+            v += Math.sin(Math.sqrt(dx * dx + dy * dy) * 8 - age * 3) * (1 - age / RIPPLE_LIFE) * 0.2;
           }
 
           let value = (v + 0.9) / 1.8;
-          value = Math.pow(Math.max(0,value), 2.6);
+          value = value > 0 ? Math.pow(value, 2.6) : 0;
+          const s = smoothed[idx] += (value - smoothed[idx]) * 0.15;
 
-          const idx = y*COLS + x;
-          const prev = smoothed[idx];
-          const next = prev + (value - prev) * 0.15;
-          smoothed[idx] = next;
-
-          ctx.fillStyle = colorFor(next);
-          ctx.fillRect(Math.floor(x*cellW), Math.floor(y*cellH), Math.ceil(cellW)+1, Math.ceil(cellH)+1);
+          const li = (s >= 1 ? STEPS : s <= 0 ? 0 : (s * STEPS + 0.5) | 0) * 3;
+          const p = idx * 4;
+          px[p] = LUT[li]; px[p + 1] = LUT[li + 1]; px[p + 2] = LUT[li + 2];
         }
       }
-      if (!reduceMotion) requestAnimationFrame(tick);
+      ctx.putImageData(img, 0, 0);
     }
 
-    canvas.parentElement.addEventListener('mousemove', (e) => {
-      if (time - lastRippleTime < 0.45) return;
-      lastRippleTime = time;
-      const rect = canvas.getBoundingClientRect();
-      ripples.push({ x: (e.clientX-rect.left)/w, y: (e.clientY-rect.top)/h, born: time });
-      if (ripples.length > 14) ripples.shift();
-    });
+    function loop() {
+      if (!running) return;
+      draw();
+      requestAnimationFrame(loop);
+    }
+    function setRunning(on) {
+      if (reduceMotion) return;
+      if (on && !running) { running = true; requestAnimationFrame(loop); }
+      else if (!on) running = false;
+    }
 
-    window.addEventListener('resize', resize);
-    resize();
-    tick();
-    if (reduceMotion) tick();
+    if (reduceMotion) {
+      // quadro estático: converge a suavização antes de desenhar
+      for (let i = 0; i < 40; i++) draw();
+      return;
+    }
+
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      setRunning(visible && !document.hidden);
+    }).observe(canvas);
+    document.addEventListener('visibilitychange', () => setRunning(visible && !document.hidden));
+
+    if (finePointer) {
+      canvas.parentElement.addEventListener('mousemove', (e) => {
+        if (time - lastRipple < 0.45) return;
+        lastRipple = time;
+        const rect = canvas.getBoundingClientRect();
+        ripples.push({ x: (e.clientX - rect.left) / rect.width, y: (e.clientY - rect.top) / rect.height, born: time });
+        if (ripples.length > 14) ripples.shift();
+      }, { passive: true });
+    }
+
+    setRunning(true);
   })();
-  /* Mobile nav toggle */
-  const toggle = document.querySelector('.nav-toggle');
-  const links = document.querySelector('.nav-links');
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      const open = links.style.display === 'flex';
-      links.style.display = open ? 'none' : 'flex';
-      links.style.flexDirection = 'column';
-      links.style.position = 'fixed';
-      links.style.top = '70px';
-      links.style.right = '6vw';
-      links.style.background = '#100A18';
-      links.style.border = '1px solid var(--line)';
-      links.style.padding = '22px 28px';
-      links.style.gap = '18px';
-      links.style.zIndex = '99';
-    });
-    
-  }
+})();
