@@ -250,39 +250,7 @@
   .spec:last-child{border-bottom:1px solid var(--line);}
   .spec .k{font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);}
   .spec .v{font-family:var(--font-display);font-size:16px;color:var(--ink);text-align:right;}
-
-  /* ---------- Engineering ---------- */
-  .eng-head{grid-column:2 / 8;}
-  .eng-head h2{font-size:clamp(30px,5vw,64px);}
-
-  .process{
-    grid-column:2 / 12;margin-top:min(9vh,80px);
-    display:flex;flex-wrap:wrap;align-items:center;gap:0;
-  }
-  .p-step{
-    font-family:var(--font-display);font-size:clamp(15px,1.7vw,22px);letter-spacing:0.02em;
-    color:var(--ink-faint);padding:10px 0;transition:color .4s ease;
-  }
-  .p-step.on{color:var(--ink);}
-  .p-arrow{width:34px;height:10px;margin:0 clamp(10px,1.6vw,24px);flex:none;background:var(--ink-faint);clip-path:var(--edge);transition:background .4s ease;}
-  .p-arrow.on{background:var(--accent);}
-
-  .discipline-row{
-    grid-column:2 / 12;margin-top:min(10vh,88px);
-    display:flex;flex-wrap:wrap;border-top:1px solid var(--line);
-  }
-  .discipline{
-    flex:1 1 200px;padding:24px 20px 24px 0;border-bottom:1px solid var(--line);
-    font-family:var(--font-mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim);
-    position:relative;
-  }
-  .discipline::before{content:"";display:inline-block;width:6px;height:6px;background:var(--accent);margin-right:10px;transform:translateY(-1px);}
-
-  /* ---------- Performance ---------- */
-  .perf-head{grid-column:2 / 9;}
-  .perf-head h2{font-size:clamp(30px,5vw,64px);}
-  .perf-row{grid-column:2 / 12;margin-top:min(8vh,70px);}
-
+  
   /* ---------- Team ---------- */
   .team-head{grid-column:2 / 8;}
   .team-head h2{font-size:clamp(30px,5vw,64px);}
@@ -551,10 +519,6 @@
   .impact-image::before{ inset: 12px -8px -12px 8px; }
   #impacto::before{ font-size: 46vw; left: 0; bottom: -6vw; }
 }
-/* =========================================================
-   MOLDURA DAS FOTOS (equipe + impacto)
-   Pra ajustar o visual, mexa só nas variáveis deste primeiro bloco
-   ========================================================= */
 .team-image,
 .impact-image{
   --veil: .35;       /* véu roxo SEM o mouse: 0 = nenhum, 1 = bem escuro (antes era .6) */
@@ -622,7 +586,7 @@
 #equipe{
   overflow:hidden;
   background:
-    radial-gradient(ellipse 50% 60% at 20% 85%, rgba(90,24,154,.30), transparent 70%),
+    radial-gradient(ellipse 50% 60% at 20% 85%, rgba(90,24,154,.30), transparent 0%),
     var(--bg);
 }
 #equipe .g{ position:relative; z-index:1; }
@@ -632,7 +596,7 @@
   font-family:var(--font-display); font-weight:700;
   font-size:clamp(160px, 26vw, 400px); line-height:1;
   color:transparent;
-  -webkit-text-stroke:1px rgba(245,243,247,.08);
+  -webkit-text-stroke:2px rgba(255, 255, 0, 0.1);
   pointer-events:none;
 }
 
