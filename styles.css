@@ -322,20 +322,15 @@
   .impact-copy{grid-column:2 / 7;margin-top:30px;}
   .impact-copy p{color:var(--ink-dim);font-size:15.5px;max-width:440px;}
   .impact-stats{grid-column:2 / 8;margin-top:30px;}
-  .impact-image{
-    position: absolute;
-    top: 12vw;
-    right: 12vw;
-    width: clamp(250px, 20vw, 500px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+  /* ---------- Impact: fundo da seção ---------- */
+  #impacto{
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 55% 70% at 82% 40%, rgba(90,24,154,.38), transparent 70%),
+      var(--bg-alt);
   }
-  .impact-image img{
-    width: clamp(250px, 20vw, 500px);
-    height: auto;
-    object-fit: contain;
-  }
+  #impacto .g{ position:relative; z-index:1; }
   /* ---------- Sponsors ---------- */
   .sponsors-head{grid-column:2 / 8;}
   .sponsors-head h2{font-size:clamp(28px,4.4vw,52px);}
@@ -544,4 +539,115 @@
   .stat-line .v{min-width:64px;}
   .final-links{flex-direction:column;gap:22px;}
   .foot-row{flex-direction:column;}
+}
+@media (max-width:980px){
+  .impact-image{
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 0;
+    aspect-ratio: 16/10;
+    margin-top: 36px;
+  }
+  .impact-image::before{ inset: 12px -8px -12px 8px; }
+  #impacto::before{ font-size: 46vw; left: 0; bottom: -6vw; }
+}
+/* =========================================================
+   MOLDURA DAS FOTOS (equipe + impacto)
+   Pra ajustar o visual, mexa só nas variáveis deste primeiro bloco
+   ========================================================= */
+.team-image,
+.impact-image{
+  --veil: .35;       /* véu roxo SEM o mouse: 0 = nenhum, 1 = bem escuro (antes era .6) */
+  --veil-hover: 0;   /* véu COM o mouse em cima */
+  --gray: .15;       /* dessaturação SEM o mouse: 0 = cores reais, 1 = preto e branco */
+  --bright: 1.08;    /* brilho SEM o mouse: 1 = normal, acima de 1 = mais claro */
+  --frame: .5;       /* opacidade da moldura amarela */
+  position: relative;
+  overflow: visible;
+}
+
+.team-image::before,
+.impact-image::before{
+  content:"";
+  position:absolute;
+  inset: 18px -18px -18px 18px;
+  border: 1px solid var(--accent);
+  opacity: var(--frame);
+  pointer-events: none;
+}
+.team-image img,
+.impact-image img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  filter: grayscale(var(--gray)) contrast(1.05) brightness(var(--bright));
+  transition: filter .6s var(--ease);
+}
+.team-image::after,
+.impact-image::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(160deg, #5A189A, #110020);
+  mix-blend-mode: multiply;
+  opacity: var(--veil);
+  pointer-events:none;
+  transition: opacity .6s var(--ease);
+}
+.team-image:hover img,
+.impact-image:hover img{ filter:none; }
+.team-image:hover::after,
+.impact-image:hover::after{ opacity: var(--veil-hover); }
+
+.impact-caption,
+.photo-caption{
+  position:absolute; left:16px; bottom:14px; z-index:2;
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink); text-shadow:0 1px 8px rgba(0,0,0,.7);
+}
+
+/* ---------- Foto do Impacto: posição ---------- */
+.impact-image{
+  --shift: 2.5vw;          /* quanto ela vai pra direita (0 = posição original) */
+  grid-column: 8 / 12;
+  grid-row: 1 / span 3;
+  align-self: stretch;
+  min-height: 380px;
+  margin-top: 8px;
+  left: var(--shift);
+}
+#equipe{
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 50% 60% at 20% 85%, rgba(90,24,154,.30), transparent 70%),
+    var(--bg);
+}
+#equipe .g{ position:relative; z-index:1; }
+#equipe::before{
+  content:"VG";
+  position:absolute; right:3vw; bottom:-3vw; z-index:0;
+  font-family:var(--font-display); font-weight:700;
+  font-size:clamp(160px, 26vw, 400px); line-height:1;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(245,243,247,.08);
+  pointer-events:none;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width:980px){
+  .impact-image{
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 0;
+    aspect-ratio: 16/10;
+    margin-top: 36px;
+    left: 0;
+  }
+  .team-image::before,
+  .impact-image::before{ inset: 12px -8px -12px 8px; }
+  #impacto::before{ font-size: 46vw; left: 0; bottom: -6vw; }
+  #equipe::before{ font-size: 46vw; right: 0; bottom: -6vw; }
 }
